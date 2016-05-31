@@ -23,6 +23,8 @@ void SOMO_II::begin(uint8_t input_media)
     send(SOURCE, 0x00, input_media);
   }
   setVol(15);
+  // wait for the SOMO module to boot up
+  delay(250);
 }
 
 s_SomoMessage SOMO_II::send(e_SomoCMD message, uint8_t para1, uint8_t para2)
@@ -37,8 +39,35 @@ s_SomoMessage SOMO_II::send(e_SomoCMD message, uint8_t para1, uint8_t para2)
   _my_serial.write((uint8_t*)&the_message, sizeof(the_message));
   _my_serial.flush();
 
-  s_SomoMessage empty;
-  return empty;
+  delay(50);
+  s_SomoMessage reply;
+  bool end_message = false;
+  uint32_t last_message = millis();
+  while (_my_serial.available() && end_message == false && millis() - last_message <= SOMO_SERIAL_TIMEOUT) {
+    uint8_t in = _my_serial.read();
+    if (in == SOMO_START_BYTE) {
+      last_message = millis();
+      reply.cmd = _my_serial.read();
+      reply.feedback = _my_serial.read();
+      reply.para1 = _my_serial.read();
+      reply.para2 = _my_serial.read();
+      reply.checksum1 = _my_serial.read();
+      reply.checksum2 = _my_serial.read();
+      reply._end = _my_serial.read();
+    }
+    if (reply._end == SOMO_END_BYTE) {
+      // assume that the message is valid
+      // TODO: validate the checksum bytes
+      end_message = true;
+    }
+  }
+
+  if (end_message == false) {
+    s_SomoMessage empty;
+    return empty;
+  } else {
+    return reply;
+  }
 }
 
 uint8_t SOMO_II::reset()

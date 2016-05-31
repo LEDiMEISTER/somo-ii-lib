@@ -7,6 +7,10 @@
 #ifndef somo_ii_h
 #define somo_ii_h
 
+#define SOMO_BAUD 9600 // SOMO-II is requires 9600 baud
+
+#define SOMO_SERIAL_TIMEOUT 300
+
 #define SOMO_NEXT 0x01
 #define SOMO_PREV 0x02
 #define SOMO_TRACK_NUM 0x03 // send track no. as para2
@@ -54,15 +58,18 @@
 #define SOMO_FINISHED_uSD 0x3D
 #define SOMO_PWR_ON 0x3F
 
+#define SOMO_START_BYTE 0x7E
+#define SOMO_END_BYTE 0xEF
+
 typedef struct s_SomoMessage {
-  uint8_t _start = 0x7E; // $$ = 0x7E
+  uint8_t _start = SOMO_START_BYTE; // $$ = 0x7E
   uint8_t cmd = 0x41;
   uint8_t feedback = 0x00;
   uint8_t para1 = 0x00;
   uint8_t para2 = 0x00;
   uint8_t checksum1 = 0xFF;
   uint8_t checksum2 = 0xBF;
-  uint8_t _end = 0xEF; // $0 = 0xEF
+  uint8_t _end = SOMO_END_BYTE; // $0 = 0xEF
 };
 
 enum e_SomoCMD {
