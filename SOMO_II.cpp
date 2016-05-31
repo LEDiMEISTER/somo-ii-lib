@@ -31,6 +31,11 @@ s_SomoMessage SOMO_II::send(e_SomoCMD message, uint8_t para1, uint8_t para2)
 {
   s_SomoMessage the_message;
   the_message.cmd = message;
+  if (_feedback == true) {
+    the_message.feedback = 0x01;
+  } else {
+    the_message.feedback = 0x00;
+  }
   the_message.para1 = para1;
   the_message.para2 = para2;
   uint16_t chksum = 0xFFFF - ((uint16_t)the_message.cmd + (uint16_t)the_message.feedback + (uint16_t)the_message.para1 + (uint16_t)the_message.para2) + 1;
@@ -70,12 +75,22 @@ s_SomoMessage SOMO_II::send(e_SomoCMD message, uint8_t para1, uint8_t para2)
   }
 }
 
+void SOMO_II::feedback(bool is_wanted) {
+  if (is_wanted == true) {
+    _feedback = true;
+  } else {
+    _feedback = false;
+  }
+}
+
 uint8_t SOMO_II::reset()
 {
   s_SomoMessage reply = send(RESET);
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -87,6 +102,8 @@ uint8_t SOMO_II::playFile(uint8_t folder, uint8_t file)
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -98,6 +115,8 @@ uint8_t SOMO_II::playTrack(uint8_t track_num)
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -109,6 +128,8 @@ uint8_t SOMO_II::stop()
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -121,6 +142,8 @@ uint8_t SOMO_II::setVol(uint8_t volume_level)
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -132,6 +155,8 @@ uint8_t SOMO_II::volUp()
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }
@@ -142,6 +167,8 @@ uint8_t SOMO_II::volDown(){
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
+  } else if (reply.cmd == SOMO_OK) {
+    return SOMO_OK;
   } else {
     return 0;
   }

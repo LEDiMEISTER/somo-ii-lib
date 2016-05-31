@@ -9,6 +9,7 @@ SOMO_II mp3 = SOMO_II(mySerial);
 void setup() {
   mySerial.begin(SOMO_BAUD);
   mp3.begin();
+  mp3.feedback(false);
 
   Serial.begin(115200);
   Serial.println(F("starting play_test"));
@@ -20,10 +21,10 @@ void loop() {
   for (int i=0; i<6; i++) {
     Serial.print(F("playing: "));
     Serial.print(playlist[i]);
-    int err = mp3.playFile(1,playlist[i]);
+    uint8_t err = mp3.playFile(1,playlist[i]);
     if (err != 0) {
-      Serial.print(F(", err: "));
-      Serial.print(err);
+      Serial.print(F(", err: 0x"));
+      Serial.print(err, HEX);
     }
     Serial.println();
     delay(1000);

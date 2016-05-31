@@ -63,7 +63,7 @@
 
 typedef struct s_SomoMessage {
   uint8_t _start = SOMO_START_BYTE; // $$ = 0x7E
-  uint8_t cmd = 0x41;
+  uint8_t cmd = 0x00;
   uint8_t feedback = 0x00;
   uint8_t para1 = 0x00;
   uint8_t para2 = 0x00;
