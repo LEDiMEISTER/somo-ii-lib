@@ -1,3 +1,8 @@
+/* countdown and gameplay test
+
+   Uses the sound files from: https://github.com/DoESLiverpool/made-invaders/tree/master/sounds/01
+
+*/
 #include <SoftwareSerial.h>
 #include <SOMO_II.h>
 
