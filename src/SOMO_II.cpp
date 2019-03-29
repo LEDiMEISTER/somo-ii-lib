@@ -138,7 +138,7 @@ uint8_t SOMO_II::stop()
 uint8_t SOMO_II::setVol(uint8_t volume_level)
 {
   volume_level = constrain(volume_level, 0x00, 0x1E);
-  s_SomoMessage reply = send(PLAY_TRACK, 0x00, volume_level);
+  s_SomoMessage reply = send(SET_VOLUME, 0x00, volume_level);
 
   if (reply.cmd == SOMO_ERR) {
     return reply.para2;
